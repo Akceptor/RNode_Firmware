@@ -16,6 +16,9 @@
 #include <Arduino.h>
 #include <SPI.h>
 #include "Utilities.h"
+#if MCU_VARIANT == MCU_ESP32
+  #include "esp_ota_ops.h"
+#endif
 
 FIFOBuffer serialFIFO;
 uint8_t serialBuffer[CONFIG_UART_BUFFER_SIZE+1];
@@ -59,6 +62,13 @@ char sbuf[128];
 #endif
 
 void setup() {
+  #if MCU_VARIANT == MCU_ESP32
+    // Per-reboot OTA slot alternation — arms the inactive slot so the next reboot
+    // runs the other firmware. Must be present in every firmware in every slot.
+    const esp_partition_t *_nx = esp_ota_get_next_update_partition(NULL);
+    if (_nx) esp_ota_set_boot_partition(_nx);
+  #endif
+
   #if MCU_VARIANT == MCU_ESP32
     boot_seq();
     EEPROM.begin(EEPROM_SIZE);
@@ -1337,6 +1347,14 @@ void serial_callback(uint8_t sbyte) {
             np_int_conf_save(sbyte);
         }
 
+      #endif
+    } else if (command == CMD_SLOT_SWITCH) {
+      #if MCU_VARIANT == MCU_ESP32
+        const esp_partition_t *nx = esp_ota_get_next_update_partition(NULL);
+        if (nx) {
+          esp_ota_set_boot_partition(nx);
+          ESP.restart();
+        }
       #endif
     }
   }

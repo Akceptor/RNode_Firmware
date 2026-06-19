@@ -62,6 +62,7 @@
   #define CMD_DISP_RCND   0x68
   #define CMD_NP_INT      0x65
   #define CMD_BT_CTRL     0x46
+  #define CMD_SLOT_SWITCH 0x72
   #define CMD_BT_UNPAIR   0x70
   #define CMD_BT_PIN      0x62
   #define CMD_DIS_IA      0x69
