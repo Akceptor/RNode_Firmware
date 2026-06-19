@@ -62,12 +62,9 @@ char sbuf[128];
 #endif
 
 void setup() {
-  #if MCU_VARIANT == MCU_ESP32
-    // Per-reboot OTA slot alternation — arms the inactive slot so the next reboot
-    // runs the other firmware. Must be present in every firmware in every slot.
-    const esp_partition_t *_nx = esp_ota_get_next_update_partition(NULL);
-    if (_nx) esp_ota_set_boot_partition(_nx);
-  #endif
+  // Slot selection is managed externally (slot-switch bootloader / web builder).
+  // Do NOT call esp_ota_set_boot_partition() here — it would override the user's
+  // choice and force alternation on every boot, always landing back on slot0.
 
   #if MCU_VARIANT == MCU_ESP32
     boot_seq();
