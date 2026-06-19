@@ -14,7 +14,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <FS.h>
-#include <SPIFFS.h>
+#include <LittleFS.h>
 #include <WiFi.h>
 #include <WebServer.h>
 
@@ -47,7 +47,7 @@ void console_dbg(String msg) {
 
 bool exists(String path){
   bool yes = false;
-  File file = SPIFFS.open(path, "r");
+  File file = LittleFS.open(path, "r");
   if(!file.isDirectory()){
     yes = true;
   }
@@ -109,7 +109,7 @@ bool console_serve_file(String path) {
       path += ".gz";
     }
     
-    File file = SPIFFS.open(path, "r");
+    File file = LittleFS.open(path, "r");
     console_dbg("Serving file to client");
     server.streamFile(file, content_type);
     file.close();
@@ -124,7 +124,7 @@ bool console_serve_file(String path) {
       Serial.println(remap_path);
 
       if (exists(remap_path)) {
-        File file = SPIFFS.open(remap_path, "r");
+        File file = LittleFS.open(remap_path, "r");
         console_dbg("Serving remapped file to client");
         server.streamFile(file, content_type);
         console_dbg("Closing file");
@@ -157,11 +157,11 @@ void console_start() {
   IPAddress nm(255, 255, 255, 0);
   WiFi.softAPConfig(ip, ip, nm);
 
-  if(!SPIFFS.begin(true)){
-    console_dbg("Error: Could not mount SPIFFS");
+  if(!LittleFS.begin(true)){
+    console_dbg("Error: Could not mount LittleFS");
     return;
   } else {
-    console_dbg("SPIFFS Ready");
+    console_dbg("LittleFS Ready");
   }
 
   #if HAS_SD
