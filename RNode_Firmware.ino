@@ -187,6 +187,8 @@ void setup() {
   LoRa->setPins(pin_cs, pin_reset, pin_dio, pin_busy, pin_rxen);
   #elif MODEM == SX1280
   LoRa->setPins(pin_cs, pin_reset, pin_dio, pin_busy, pin_rxen, pin_txen);
+  #elif MODEM == LR1121
+  LoRa->setPins(pin_cs, pin_reset, pin_dio, pin_busy);
   #endif
   
   #if MCU_VARIANT == MCU_ESP32 || MCU_VARIANT == MCU_NRF52
@@ -671,7 +673,7 @@ void add_airtime(uint16_t written) {
       lora_symbols += lora_preamble_symbols + 0.25 + 8;
       packet_cost_ms += lora_symbols * lora_symbol_time_ms;
       
-    #elif MODEM == SX1262 || MODEM == SX1280
+    #elif MODEM == SX1262 || MODEM == SX1280 || MODEM == LR1121
       if (lora_sf < 7) {
         lora_symbols += (8*written + PHY_CRC_LORA_BITS - 4*lora_sf + PHY_HEADER_LORA_SYMBOLS);
         lora_symbols /=                              4*lora_sf;
@@ -872,6 +874,8 @@ void serial_callback(uint8_t sbyte) {
           #else
             if (txp > 22) txp = 22;
           #endif
+        #elif MODEM == LR1121
+          if (txp > 22) txp = 22;
         #elif MODEM == SX1280
           #if HAS_PA
             if (txp > 20) txp = 20;

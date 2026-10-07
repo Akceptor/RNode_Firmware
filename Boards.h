@@ -144,9 +144,15 @@
       #define MODEM SX1262
     #elif BOARD_MODEL == BOARD_GENERIC_NRF52
       #define MODEM SX1262
+    #elif BOARD_MODEL == BOARD_GENERIC_ESP32 && defined(UNIFIED_ESP32_LR1121_RX)
+      #define MODEM LR1121
     #else
       #define MODEM SX1276
     #endif
+  #endif
+
+  #if defined(UNIFIED_ESP32_LR1121_RX) && MODEM != LR1121
+    #error "UNIFIED_ESP32_LR1121_RX requires MODEM LR1121"
   #endif
 
   #define LORA_PA_UNKNOWN  0x00
@@ -222,7 +228,42 @@
     #define PIN_GPS_TX 12
     #define PIN_GPS_RX 34
 
-    #if BOARD_MODEL == BOARD_GENERIC_ESP32
+    #if BOARD_MODEL == BOARD_GENERIC_ESP32 && defined(UNIFIED_ESP32_LR1121_RX)
+      // ESP32 ELRS-style receiver, LR1121 on non-default SPI pins
+      #define HAS_BLUETOOTH true
+      #define HAS_CONSOLE true
+      #define HAS_EEPROM true
+      #define HAS_NP true
+      #define HAS_BUSY true
+      #define HAS_TCXO false
+      #define LR11XX_DIO_AS_RF_SWITCH true
+      #define LR11XX_RFSW_CFG {0x0F, 0x00, 0x04, 0x08, 0x08, 0x02, 0x00, 0x01}
+      #define LR11XX_USE_DCDC true
+      const int pin_cs = 27;
+      const int pin_reset = 26;
+      const int pin_busy = 36;
+      const int pin_dio = 37;
+      const int pin_sclk = 25;
+      const int pin_miso = 33;
+      const int pin_mosi = 32;
+      const int pin_np = 22;
+      const int pin_cs2 = 13;
+
+    #elif BOARD_MODEL == BOARD_GENERIC_ESP32 && defined(ESP32_SX12XX_DUAL_SINGLE)
+      // ESP32-PICO-D4 ELRS-style receiver, SX1276 on non-default SPI pins
+      #define HAS_BLUETOOTH true
+      #define HAS_CONSOLE true
+      #define HAS_EEPROM true
+      #define HAS_NP true
+      const int pin_cs = 27;
+      const int pin_reset = 26;
+      const int pin_dio = 36;
+      const int pin_sclk = 25;
+      const int pin_miso = 33;
+      const int pin_mosi = 32;
+      const int pin_np = 22;
+
+    #elif BOARD_MODEL == BOARD_GENERIC_ESP32
       #define HAS_BLUETOOTH true
       #define HAS_CONSOLE true
       #define HAS_EEPROM true

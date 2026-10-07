@@ -38,6 +38,9 @@ sx127x *LoRa = &sx127x_modem;
 #elif MODEM == SX1280
 #include "sx128x.h"
 sx128x *LoRa = &sx128x_modem;
+#elif MODEM == LR1121
+#include "lr11xx.h"
+lr11xx *LoRa = &lr11xx_modem;
 #endif
 
 #include "ROM.h"
