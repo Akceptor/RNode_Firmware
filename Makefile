@@ -139,6 +139,9 @@ firmware-featheresp32: check_bt_buffers
 firmware-genericesp32: check_bt_buffers
 	arduino-cli compile --log --fqbn esp32:esp32:esp32 -e --build-property "build.partitions=min_spiffs" --build-property "upload.maximum_size=2097152" --build-property "compiler.cpp.extra_flags=\"-DBOARD_MODEL=0x35\""
 
+firmware-esp32_sx12xx_dual_single: check_bt_buffers
+	arduino-cli compile --log --fqbn esp32:esp32:esp32 -e --build-property "build.partitions=no_ota" --build-property "upload.maximum_size=2097152" --build-property "compiler.cpp.extra_flags=\"-DBOARD_MODEL=0x35\" \"-DESP32_SX12XX_DUAL_SINGLE\""
+
 firmware-rak4631:
 	arduino-cli compile --log --fqbn rakwireless:nrf52:WisCoreRAK4631Board -e --build-property "build.partitions=min_spiffs" --build-property "upload.maximum_size=2097152" --build-property "compiler.cpp.extra_flags=\"-DBOARD_MODEL=0x51\""
 

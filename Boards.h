@@ -222,7 +222,21 @@
     #define PIN_GPS_TX 12
     #define PIN_GPS_RX 34
 
-    #if BOARD_MODEL == BOARD_GENERIC_ESP32
+    #if BOARD_MODEL == BOARD_GENERIC_ESP32 && defined(ESP32_SX12XX_DUAL_SINGLE)
+      // ESP32-PICO-D4 ELRS-style receiver, SX1276 on non-default SPI pins
+      #define HAS_BLUETOOTH true
+      #define HAS_CONSOLE true
+      #define HAS_EEPROM true
+      #define HAS_NP true
+      const int pin_cs = 27;
+      const int pin_reset = 26;
+      const int pin_dio = 36;
+      const int pin_sclk = 25;
+      const int pin_miso = 33;
+      const int pin_mosi = 32;
+      const int pin_np = 22;
+
+    #elif BOARD_MODEL == BOARD_GENERIC_ESP32
       #define HAS_BLUETOOTH true
       #define HAS_CONSOLE true
       #define HAS_EEPROM true
