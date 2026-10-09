@@ -84,6 +84,8 @@ uint8_t eeprom_read(uint32_t mapped_addr);
     #include "hal/wdt_hal.h"
 	#elif BOARD_MODEL == BOARD_T3S3
 		#include "hal/wdt_hal.h"
+  #elif defined(UNIFIED_ESP32C3_LR1121_RX)
+    // hal/wdt_hal.h does not compile as C++ on ESP32-C3 (IDF 4.4) and is unused here
   #else
 		#include "hal/wdt_hal.h"
 	#endif

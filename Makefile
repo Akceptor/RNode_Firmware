@@ -145,6 +145,9 @@ firmware-esp32_sx12xx_dual_single: check_bt_buffers
 firmware-unified_esp32_lr1121_rx: check_bt_buffers
 	arduino-cli compile --log --fqbn esp32:esp32:esp32:FlashMode=dio -e --build-property "build.partitions=no_ota" --build-property "upload.maximum_size=2097152" --build-property "compiler.cpp.extra_flags=\"-DBOARD_MODEL=0x35\" \"-DUNIFIED_ESP32_LR1121_RX\""
 
+firmware-unified_esp32c3_lr1121_rx:
+	arduino-cli compile --log --fqbn esp32:esp32:esp32c3:FlashMode=dio,CDCOnBoot=default -e --build-property "build.partitions=min_spiffs" --build-property "upload.maximum_size=1966080" --build-property "compiler.cpp.extra_flags=\"-DBOARD_MODEL=0x35\" \"-DUNIFIED_ESP32C3_LR1121_RX\""
+
 firmware-rak4631:
 	arduino-cli compile --log --fqbn rakwireless:nrf52:WisCoreRAK4631Board -e --build-property "build.partitions=min_spiffs" --build-property "upload.maximum_size=2097152" --build-property "compiler.cpp.extra_flags=\"-DBOARD_MODEL=0x51\""
 

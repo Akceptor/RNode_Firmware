@@ -144,7 +144,7 @@
       #define MODEM SX1262
     #elif BOARD_MODEL == BOARD_GENERIC_NRF52
       #define MODEM SX1262
-    #elif BOARD_MODEL == BOARD_GENERIC_ESP32 && defined(UNIFIED_ESP32_LR1121_RX)
+    #elif BOARD_MODEL == BOARD_GENERIC_ESP32 && (defined(UNIFIED_ESP32_LR1121_RX) || defined(UNIFIED_ESP32C3_LR1121_RX))
       #define MODEM LR1121
     #else
       #define MODEM SX1276
@@ -153,6 +153,16 @@
 
   #if defined(UNIFIED_ESP32_LR1121_RX) && MODEM != LR1121
     #error "UNIFIED_ESP32_LR1121_RX requires MODEM LR1121"
+  #endif
+
+  #if defined(UNIFIED_ESP32C3_LR1121_RX)
+    #if MODEM != LR1121
+      #error "UNIFIED_ESP32C3_LR1121_RX requires MODEM LR1121"
+    #endif
+    #include "sdkconfig.h"
+    #if !defined(CONFIG_IDF_TARGET_ESP32C3)
+      #error "UNIFIED_ESP32C3_LR1121_RX requires the ESP32-C3 target"
+    #endif
   #endif
 
   #define LORA_PA_UNKNOWN  0x00
@@ -228,7 +238,30 @@
     #define PIN_GPS_TX 12
     #define PIN_GPS_RX 34
 
-    #if BOARD_MODEL == BOARD_GENERIC_ESP32 && defined(UNIFIED_ESP32_LR1121_RX)
+    #if BOARD_MODEL == BOARD_GENERIC_ESP32 && defined(UNIFIED_ESP32C3_LR1121_RX)
+      // ESP32-C3 ELRS-style receiver, LR1121 on non-default SPI pins
+      #define IS_ESP32C3 true
+      #define HAS_BLUETOOTH false
+      #define HAS_BLE true
+      #define HAS_CONSOLE false
+      #define HAS_EEPROM true
+      #define HAS_NP true
+      #define HAS_BUSY true
+      #define HAS_TCXO false
+      #define LR11XX_DIO_AS_RF_SWITCH true
+      #define LR11XX_RFSW_CFG {0x0F, 0x00, 0x04, 0x08, 0x08, 0x02, 0x00, 0x01}
+      #define LR11XX_USE_DCDC true
+      const int pin_cs = 7;
+      const int pin_reset = 2;
+      const int pin_busy = 3;
+      const int pin_dio = 1;
+      const int pin_sclk = 6;
+      const int pin_miso = 5;
+      const int pin_mosi = 4;
+      const int pin_np = 8;
+      const int pin_cs2 = -1;
+
+    #elif BOARD_MODEL == BOARD_GENERIC_ESP32 && defined(UNIFIED_ESP32_LR1121_RX)
       // ESP32 ELRS-style receiver, LR1121 on non-default SPI pins
       #define HAS_BLUETOOTH true
       #define HAS_CONSOLE true
