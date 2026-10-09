@@ -177,8 +177,11 @@ bool lr11xx::preInit() {
   digitalWrite(_ss, HIGH);
 
   // Second radio footprint on this board shares the SPI bus; keep it deselected
-  pinMode(pin_cs2, OUTPUT);
-  digitalWrite(pin_cs2, HIGH);
+  // pin_cs2 is -1 on boards without it (ESP32-C3: GPIO11-17 are flash pins)
+  if (pin_cs2 >= 0) {
+    pinMode(pin_cs2, OUTPUT);
+    digitalWrite(pin_cs2, HIGH);
+  }
 
   if (_busy != -1) { pinMode(_busy, INPUT); }
 
